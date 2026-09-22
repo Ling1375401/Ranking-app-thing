@@ -34,7 +34,6 @@
         body { font-family: 'Inter', sans-serif; }
         .dragging { opacity: 0.4; transform: scale(0.98); }
         .drag-over { border-top: 3px solid #0284c7 !important; }
-        /* Custom scrollbars */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -43,7 +42,6 @@
 </head>
 <body class="bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 min-h-full flex flex-col transition-colors duration-200">
 
-    <!-- Top Header Navigation -->
     <header class="bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-30 shadow-sm">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 py-3.5 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center space-x-3">
@@ -55,7 +53,7 @@
                         Priority Ranker
                         <span id="itemCountBadge" class="text-xs bg-sky-100 dark:bg-sky-950 text-sky-700 dark:text-sky-300 px-2 py-0.5 rounded-full font-medium">0 items</span>
                     </h1>
-                    <p class="text-xs text-slate-500 dark:text-slate-400">Drag & drop or use controls to prioritize your goals & references</p>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Drag & drop or use controls to prioritize goals, references, and difficulty</p>
                 </div>
             </div>
 
@@ -76,62 +74,66 @@
         </div>
     </header>
 
-    <!-- Main Content Container -->
     <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-6 flex flex-col gap-5">
 
-        <!-- Controls Toolbar (Search & Goal Filters) -->
-        <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700/80 flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
-            <!-- Search Box -->
-            <div class="relative flex-1">
+        <!-- Controls Toolbar (Search & Filters for Goals and Difficulty) -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm border border-slate-200 dark:border-slate-700/80 flex flex-col gap-3">
+            <!-- Search Input -->
+            <div class="relative w-full">
                 <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
-                <input type="text" id="searchInput" placeholder="Search by title, description, goal, or reference map..."
+                <input type="text" id="searchInput" placeholder="Search by title, description, goal, reference, or difficulty..."
                     class="w-full pl-9 pr-9 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 transition-all placeholder:text-slate-400 dark:text-white">
                 <button id="clearSearchBtn" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
                     <i class="fa-solid fa-circle-xmark text-sm"></i>
                 </button>
             </div>
 
-            <!-- Goal Filter Pills Bar -->
-            <div class="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 scrollbar-none" id="goalFilterContainer">
-                <!-- Dynamically populated goal filter buttons -->
+            <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 pt-2 border-t border-slate-100 dark:border-slate-700/60">
+                <!-- Goal Filters -->
+                <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none" id="goalFilterContainer">
+                    <!-- Dynamically populated goal filter buttons -->
+                </div>
+
+                <!-- Difficulty Filters -->
+                <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-1 md:pb-0 scrollbar-none" id="difficultyFilterContainer">
+                    <!-- Dynamically populated difficulty filter buttons -->
+                </div>
             </div>
         </div>
 
-        <!-- Action Bar: Batch Quick Controls & Info -->
         <div class="flex flex-wrap items-center justify-between gap-3 px-1">
             <div id="filterInfoText" class="text-xs text-slate-500 dark:text-slate-400">
-                Displaying all items in priority order. Drag items to reorder.
+                Displaying all items in priority order. Drag items or use controls to reorder.
             </div>
             <div class="flex items-center gap-2">
-                <button id="resetSampleDataBtn" class="text-xs text-slate-500 dark:text-slate-400 hover:text-sky-600 dark:hover:text-sky-400 transition-colors underline underline-offset-2">
-                    <i class="fa-solid fa-rotate-left mr-1"></i> Load Sample Data
-                </button>
-                <span class="text-slate-300 dark:text-slate-700">|</span>
                 <button id="clearAllBtn" class="text-xs text-rose-500 hover:text-rose-700 dark:text-rose-400 dark:hover:text-rose-300 transition-colors underline underline-offset-2">
-                    <i class="fa-solid fa-trash-can mr-1"></i> Clear All
+                    <i class="fa-solid fa-trash-can mr-1"></i> Clear All Items
                 </button>
             </div>
         </div>
 
-        <!-- Priority Items Stack -->
-        <div id="rankingList" class="flex flex-col gap-3 min-h-[250px] pb-12">
-            <!-- Dynamic Items Cards rendered here -->
+        <div id="rankingList" class="flex flex-col gap-3 min-h-[200px] pb-12">
+            <!-- Dynamic Item Cards rendered here -->
         </div>
 
-        <!-- Empty State View -->
         <div id="emptyState" class="hidden bg-white dark:bg-slate-800 border-2 border-dashed border-slate-200 dark:border-slate-700 rounded-2xl p-10 text-center flex flex-col items-center justify-center gap-3">
-            <div class="w-14 h-14 rounded-full bg-slate-100 dark:bg-slate-700/60 flex items-center justify-center text-slate-400 dark:text-slate-500 text-2xl">
+            <div class="w-16 h-16 rounded-2xl bg-sky-50 dark:bg-sky-950/60 text-sky-600 dark:text-sky-400 flex items-center justify-center text-3xl shadow-sm">
                 <i class="fa-solid fa-list-check"></i>
             </div>
-            <h3 class="text-base font-semibold text-slate-800 dark:text-slate-200">No priority items found</h3>
-            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md">There are no objects matching your criteria. Add new items or load sample data to get started.</p>
-            <button id="emptyAddBtn" class="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold rounded-lg shadow transition-all">
-                <i class="fa-solid fa-plus text-xs"></i> Add Your First Item
-            </button>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Your priority list is empty</h3>
+            <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 max-w-md">Get started by manually adding single text objects or importing up to 60+ items at once using CSV or JSON format.</p>
+            
+            <div class="flex flex-wrap items-center justify-center gap-3 mt-3">
+                <button id="emptyAddBtn" class="inline-flex items-center gap-2 px-4 py-2.5 bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white text-xs sm:text-sm font-semibold rounded-xl shadow-sm transition-all">
+                    <i class="fa-solid fa-plus text-xs"></i> Add Single Item
+                </button>
+                <button id="emptyImportBtn" class="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold rounded-xl transition-all">
+                    <i class="fa-solid fa-file-import text-xs"></i> Bulk Import (CSV/JSON)
+                </button>
+            </div>
         </div>
     </main>
 
-    <!-- Modal 1: Add / Edit Item Modal -->
     <div id="itemModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-lg w-full shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden transform transition-all">
             <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
@@ -142,25 +144,26 @@
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
+            
             <form id="itemForm" class="p-6 space-y-4">
                 <input type="hidden" id="editItemId">
                 
                 <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5" for="itemTitle">
-                        Title <span class="text-rose-500">*</span>
+                        Title / Name <span class="text-rose-500">*</span>
                     </label>
-                    <input type="text" id="itemTitle" required placeholder="e.g., User Auth Module, Marketing Landing Page"
+                    <input type="text" id="itemTitle" required placeholder="e.g., User Authentication Module"
                         class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <!-- Goal Type Field -->
+                    <!-- Goal Field -->
                     <div>
-                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5" for="itemGoal">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-sky-700 dark:text-sky-400 mb-1.5" for="itemGoal">
                             Goal <span class="text-rose-500">*</span>
                         </label>
-                        <input type="text" id="itemGoal" required placeholder="e.g., Revenue Growth, UX"
-                            class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
+                        <input type="text" id="itemGoal" required placeholder="e.g., Security, Performance"
+                            class="w-full px-3.5 py-2.5 bg-sky-50/50 dark:bg-sky-950/30 border border-sky-300 dark:border-sky-800 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500 focus:outline-none">
                     </div>
 
                     <!-- Reference Map Field -->
@@ -168,16 +171,32 @@
                         <label class="block text-xs font-semibold uppercase tracking-wider text-rose-700 dark:text-rose-400 mb-1.5" for="itemReferenceMap">
                             Reference Map
                         </label>
-                        <input type="text" id="itemReferenceMap" placeholder="e.g., Map-A1, Doc-402, Figma-3"
+                        <input type="text" id="itemReferenceMap" placeholder="e.g., MAP-A1, Doc-402"
                             class="w-full px-3.5 py-2.5 bg-rose-50/50 dark:bg-rose-950/30 border border-rose-300 dark:border-rose-800 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-rose-500 focus:outline-none">
                     </div>
                 </div>
 
                 <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400" for="itemDifficulty">
+                            Difficulty <span class="text-rose-500">*</span>
+                        </label>
+                        <!-- Quick Difficulty Chips -->
+                        <div class="flex items-center gap-1">
+                            <button type="button" onclick="setQuickDifficulty('Easy')" class="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 hover:bg-amber-200">Easy</button>
+                            <button type="button" onclick="setQuickDifficulty('Medium')" class="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 hover:bg-amber-200">Medium</button>
+                            <button type="button" onclick="setQuickDifficulty('Hard')" class="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 hover:bg-amber-200">Hard</button>
+                        </div>
+                    </div>
+                    <input type="text" id="itemDifficulty" required placeholder="e.g., Easy, Medium, Hard, High, Low"
+                        class="w-full px-3.5 py-2.5 bg-amber-50/50 dark:bg-amber-950/30 border border-amber-300 dark:border-amber-800 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-amber-500 focus:outline-none">
+                </div>
+
+                <div>
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1.5" for="itemDescription">
-                        Description / Notes
+                        Brief Description / Notes
                     </label>
-                    <textarea id="itemDescription" rows="3" placeholder="Brief context, links, dependencies, or key deliverables..."
+                    <textarea id="itemDescription" rows="3" placeholder="Context, details, dependencies, or acceptance criteria..."
                         class="w-full px-3.5 py-2.5 bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg text-sm text-slate-900 dark:text-white focus:ring-2 focus:ring-sky-500 focus:outline-none resize-none"></textarea>
                 </div>
 
@@ -193,7 +212,6 @@
         </div>
     </div>
 
-    <!-- Modal 2: Bulk Import / Export Modal -->
     <div id="importExportModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-2xl w-full shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col max-h-[90vh]">
             <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
@@ -216,7 +234,7 @@
                 </div>
 
                 <p id="formatDesc" class="text-xs text-slate-500 dark:text-slate-400">
-                    Copy or edit the raw priority list below. Supported CSV columns: <code class="bg-slate-100 dark:bg-slate-900 px-1 py-0.5 rounded text-sky-600 dark:text-sky-400">Rank, Title, Goal, Reference map, Description</code>.
+                    Supported CSV columns: <code class="bg-slate-100 dark:bg-slate-900 px-1 py-0.5 rounded text-sky-600 dark:text-sky-400">Rank, Title, Goal, Reference map, Difficulty, Description</code>.
                 </p>
 
                 <div>
@@ -241,7 +259,6 @@
         </div>
     </div>
 
-    <!-- Modal 3: View Summary & Screenshot Modal -->
     <div id="summaryModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white dark:bg-slate-800 rounded-2xl max-w-3xl w-full shadow-2xl border border-slate-200 dark:border-slate-700 overflow-hidden flex flex-col max-h-[90vh]">
             <div class="px-6 py-4 border-b border-slate-200 dark:border-slate-700 flex items-center justify-between">
@@ -265,7 +282,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <button id="copySummaryTextBtn" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs sm:text-sm font-semibold rounded-lg shadow-sm transition-all">
-                        <i class="fa-solid fa-paste mr-1.5"></i> Copy Summary Text
+                        <i class="fa-solid fa-paste mr-1.5"></i> Copy Formatted Summary
                     </button>
                     <button class="closeModalBtn px-4 py-2 bg-slate-200 dark:bg-slate-700 hover:bg-slate-300 dark:hover:bg-slate-600 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-medium rounded-lg transition-all">
                         Close
@@ -275,65 +292,26 @@
         </div>
     </div>
 
-    <!-- Toast Notification -->
     <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-10 opacity-0 pointer-events-none transition-all duration-300 flex items-center gap-2.5 px-4 py-3 bg-slate-900 text-white text-xs sm:text-sm font-medium rounded-xl shadow-xl border border-slate-700">
         <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-400"></i>
-        <span id="toastMsg">Action completed successfully</span>
+        <span id="toastMsg">Action completed</span>
     </div>
 
     <script>
-        // Default Sample Data with Goals and Reference Maps
-        const initialSampleData = [
-            {
-                id: 'sample-1',
-                title: 'User Authentication & Single Sign-On (SSO)',
-                goal: 'Security & Compliance',
-                referenceMap: 'SEC-2026-01 / Auth Flow',
-                description: 'Implement SAML 2.0 and OAuth2 login options to simplify team onboarding.'
-            },
-            {
-                id: 'sample-2',
-                title: 'Automated Off-site Database Backups',
-                goal: 'Infrastructure',
-                referenceMap: 'INFRA-MAP-88 / Page 12',
-                description: 'Set up hourly point-in-time snapshot recovery to secondary cloud region.'
-            },
-            {
-                id: 'sample-3',
-                title: 'Interactive Analytics Dashboard V2',
-                goal: 'User Experience',
-                referenceMap: 'UX-MAP-04 / Figma-3',
-                description: 'Redesign charts and add real-time filtering widgets for executive reports.'
-            },
-            {
-                id: 'sample-4',
-                title: 'Checkout & Subscription Conversion Optimization',
-                goal: 'Revenue Growth',
-                referenceMap: 'REV-2026-02 / Stripe API',
-                description: 'Simplify payment step-down friction to improve cart completion rate by 15%.'
-            },
-            {
-                id: 'sample-5',
-                title: 'API Rate Limiting & Developer Portal',
-                goal: 'Platform Scalability',
-                referenceMap: 'DEV-PORTAL-MAP',
-                description: 'Protect internal services from spikes and publish public documentation.'
-            }
-        ];
-
         // State variables
         let items = [];
         let currentSearchQuery = '';
         let selectedGoalFilter = 'ALL';
+        let selectedDifficultyFilter = 'ALL';
         let draggedIndex = null;
         let activeModalFormat = 'csv';
 
         // Local Storage Key
-        const STORAGE_KEY = 'priority_ranker_data_v2';
+        const STORAGE_KEY = 'priority_ranker_data_v3';
         const THEME_KEY = 'priority_ranker_theme';
 
         function initApp() {
-            // Load theme
+            // Load theme preference
             const savedTheme = localStorage.getItem(THEME_KEY);
             if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
@@ -343,21 +321,21 @@
                 document.getElementById('themeIcon').className = 'fa-solid fa-moon text-sm';
             }
 
-            // Load data
+            // Load items from LocalStorage (starts completely empty if none saved)
             const savedData = localStorage.getItem(STORAGE_KEY);
             if (savedData) {
                 try {
                     items = JSON.parse(savedData);
                 } catch (e) {
                     console.error('Failed to parse saved data', e);
-                    items = [...initialSampleData];
+                    items = [];
                 }
             } else {
-                items = [...initialSampleData];
+                items = [];
             }
 
             saveData();
-            renderGoalFilters();
+            renderFilters();
             renderList();
             setupEventListeners();
         }
@@ -372,23 +350,27 @@
             const itemCountBadge = document.getElementById('itemCountBadge');
             const filterInfoText = document.getElementById('filterInfoText');
 
-            // Filter items based on search and goal filter
-            const filteredItems = items.filter((item, index) => {
+            // Filter items based on search, goal filter, and difficulty filter
+            const filteredItems = items.filter((item) => {
                 const matchesSearch = 
                     item.title.toLowerCase().includes(currentSearchQuery.toLowerCase()) ||
                     (item.description && item.description.toLowerCase().includes(currentSearchQuery.toLowerCase())) ||
                     (item.goal && item.goal.toLowerCase().includes(currentSearchQuery.toLowerCase())) ||
-                    (item.referenceMap && item.referenceMap.toLowerCase().includes(currentSearchQuery.toLowerCase()));
+                    (item.referenceMap && item.referenceMap.toLowerCase().includes(currentSearchQuery.toLowerCase())) ||
+                    (item.difficulty && item.difficulty.toLowerCase().includes(currentSearchQuery.toLowerCase()));
                 
                 const matchesGoal = selectedGoalFilter === 'ALL' || item.goal === selectedGoalFilter;
+                const matchesDifficulty = selectedDifficultyFilter === 'ALL' || item.difficulty === selectedDifficultyFilter;
 
-                return matchesSearch && matchesGoal;
+                return matchesSearch && matchesGoal && matchesDifficulty;
             });
 
             itemCountBadge.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
 
-            if (selectedGoalFilter !== 'ALL' || currentSearchQuery) {
-                filterInfoText.textContent = `Showing ${filteredItems.length} of ${items.length} items (filtered). Clear filters to enable reordering across full list.`;
+            const isFiltered = selectedGoalFilter !== 'ALL' || selectedDifficultyFilter !== 'ALL' || currentSearchQuery !== '';
+
+            if (isFiltered) {
+                filterInfoText.textContent = `Showing ${filteredItems.length} of ${items.length} items (filtered). Clear active filters to enable priority reordering across all items.`;
             } else {
                 filterInfoText.textContent = `Displaying all ${items.length} items in priority order. Drag items or use arrows to reorder.`;
             }
@@ -404,10 +386,9 @@
             listEl.innerHTML = '';
 
             filteredItems.forEach((item) => {
-                // Find actual global index in items array
                 const globalIndex = items.findIndex(i => i.id === item.id);
                 const rankNumber = globalIndex + 1;
-                const canReorder = selectedGoalFilter === 'ALL' && currentSearchQuery === '';
+                const canReorder = !isFiltered;
 
                 const card = document.createElement('div');
                 card.className = `group bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700/80 p-4 shadow-sm hover:shadow-md transition-all flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative ${canReorder ? 'cursor-grab active:cursor-grabbing' : ''}`;
@@ -415,7 +396,6 @@
                 card.dataset.id = item.id;
                 card.dataset.index = globalIndex;
 
-                // Drag & Drop event bindings
                 if (canReorder) {
                     card.addEventListener('dragstart', handleDragStart);
                     card.addEventListener('dragover', handleDragOver);
@@ -424,15 +404,7 @@
                     card.addEventListener('dragend', handleDragEnd);
                 }
 
-                // Reference map markup with red styling
-                const referenceMapMarkup = item.referenceMap ? `
-                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/80 dark:bg-rose-950/70 dark:text-rose-300 dark:border-rose-800/80">
-                        <i class="fa-solid fa-map-location-dot text-[10px] text-rose-500 dark:text-rose-400"></i>
-                        Reference(s): ${escapeHtml(item.referenceMap)}
-                    </span>
-                ` : '';
-
-                // Goal markup with Goal: prefix
+                // Badge 1: Goal (prepended with "Goal: " in blue)
                 const goalMarkup = item.goal ? `
                     <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-sky-50 text-sky-700 border border-sky-200/80 dark:bg-sky-950/70 dark:text-sky-300 dark:border-sky-800/80">
                         <i class="fa-solid fa-bullseye text-[10px] text-sky-500 dark:text-sky-400"></i>
@@ -440,9 +412,24 @@
                     </span>
                 ` : '';
 
+                // Badge 2: Reference Map (prepended with "Reference(s): " in RED)
+                const referenceMapMarkup = item.referenceMap ? `
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-rose-50 text-rose-700 border border-rose-200/80 dark:bg-rose-950/70 dark:text-rose-300 dark:border-rose-800/80">
+                        <i class="fa-solid fa-map-location-dot text-[10px] text-rose-500 dark:text-rose-400"></i>
+                        Reference(s): ${escapeHtml(item.referenceMap)}
+                    </span>
+                ` : '';
+
+                // Badge 3: Difficulty (prepended with "Difficulty: " in ORANGE/AMBER)
+                const difficultyMarkup = item.difficulty ? `
+                    <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-amber-50 text-amber-800 border border-amber-200/80 dark:bg-amber-950/70 dark:text-amber-300 dark:border-amber-800/80">
+                        <i class="fa-solid fa-gauge-high text-[10px] text-amber-600 dark:text-amber-400"></i>
+                        Difficulty: ${escapeHtml(item.difficulty)}
+                    </span>
+                ` : '';
+
                 card.innerHTML = `
                     <div class="flex items-start gap-3 flex-1 min-w-0 w-full">
-                        <!-- Drag Handle & Rank Badge -->
                         <div class="flex items-center gap-2 select-none pt-0.5">
                             ${canReorder ? `<i class="fa-solid fa-grip-vertical text-slate-300 dark:text-slate-600 group-hover:text-slate-400 text-sm"></i>` : ''}
                             <span class="w-7 h-7 rounded-lg bg-slate-900 text-white dark:bg-slate-700 dark:text-slate-100 flex items-center justify-center font-bold text-xs shadow-sm">
@@ -450,16 +437,15 @@
                             </span>
                         </div>
 
-                        <!-- Card Core Info -->
                         <div class="flex-1 min-w-0 space-y-1.5">
                             <h4 class="text-sm sm:text-base font-bold text-slate-900 dark:text-white truncate">
                                 ${escapeHtml(item.title)}
                             </h4>
                             
-                            <!-- Badges: Prepend "Goal: " and "Reference(s): " in RED styling -->
                             <div class="flex flex-wrap items-center gap-2">
                                 ${goalMarkup}
                                 ${referenceMapMarkup}
+                                ${difficultyMarkup}
                             </div>
 
                             ${item.description ? `
@@ -470,7 +456,6 @@
                         </div>
                     </div>
 
-                    <!-- Action Controls (Arrows, Edit, Delete) -->
                     <div class="flex items-center gap-1.5 self-end sm:self-center pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100 dark:border-slate-700/60 w-full sm:w-auto justify-end">
                         ${canReorder ? `
                             <button onclick="moveItem(${globalIndex}, -1)" title="Move Up" ${globalIndex === 0 ? 'disabled class="opacity-30 cursor-not-allowed p-1.5 text-slate-400"' : 'class="p-1.5 rounded-lg text-slate-500 hover:text-sky-600 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors"'}>
@@ -495,15 +480,14 @@
             });
         }
 
-        function renderGoalFilters() {
-            const container = document.getElementById('goalFilterContainer');
-            
-            // Collect unique goals
+        function renderFilters() {
+            // Render Goal Filters
+            const goalContainer = document.getElementById('goalFilterContainer');
             const uniqueGoals = Array.from(new Set(items.map(i => i.goal).filter(Boolean)));
 
-            let html = `
+            let goalHtml = `
                 <button onclick="setGoalFilter('ALL')" 
-                    class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${selectedGoalFilter === 'ALL' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}">
+                    class="px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${selectedGoalFilter === 'ALL' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}">
                     All Goals (${items.length})
                 </button>
             `;
@@ -511,20 +495,48 @@
             uniqueGoals.forEach(goal => {
                 const count = items.filter(i => i.goal === goal).length;
                 const isActive = selectedGoalFilter === goal;
-                html += `
+                goalHtml += `
                     <button onclick="setGoalFilter('${escapeHtml(goal)}')" 
-                        class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${isActive ? 'bg-sky-600 text-white shadow-sm' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}">
+                        class="px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${isActive ? 'bg-sky-600 text-white shadow-sm' : 'bg-sky-50 dark:bg-sky-950/60 text-sky-700 dark:text-sky-300 border border-sky-200 dark:border-sky-800 hover:bg-sky-100'}">
                         Goal: ${escapeHtml(goal)} (${count})
                     </button>
                 `;
             });
+            goalContainer.innerHTML = goalHtml;
 
-            container.innerHTML = html;
+            // Render Difficulty Filters (ORANGE styled)
+            const diffContainer = document.getElementById('difficultyFilterContainer');
+            const uniqueDiffs = Array.from(new Set(items.map(i => i.difficulty).filter(Boolean)));
+
+            let diffHtml = `
+                <button onclick="setDifficultyFilter('ALL')" 
+                    class="px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${selectedDifficultyFilter === 'ALL' ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-sm' : 'bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-600'}">
+                    All Difficulties
+                </button>
+            `;
+
+            uniqueDiffs.forEach(diff => {
+                const count = items.filter(i => i.difficulty === diff).length;
+                const isActive = selectedDifficultyFilter === diff;
+                diffHtml += `
+                    <button onclick="setDifficultyFilter('${escapeHtml(diff)}')" 
+                        class="px-2.5 py-1 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${isActive ? 'bg-amber-600 text-white shadow-sm' : 'bg-amber-50 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 hover:bg-amber-100'}">
+                        Difficulty: ${escapeHtml(diff)} (${count})
+                    </button>
+                `;
+            });
+            diffContainer.innerHTML = diffHtml;
         }
 
         function setGoalFilter(goal) {
             selectedGoalFilter = goal;
-            renderGoalFilters();
+            renderFilters();
+            renderList();
+        }
+
+        function setDifficultyFilter(diff) {
+            selectedDifficultyFilter = diff;
+            renderFilters();
             renderList();
         }
 
@@ -552,11 +564,10 @@
             
             const targetIndex = parseInt(this.dataset.index);
             if (draggedIndex !== null && draggedIndex !== targetIndex) {
-                // Move item in array
                 const movedItem = items.splice(draggedIndex, 1)[0];
                 items.splice(targetIndex, 0, movedItem);
                 saveData();
-                renderGoalFilters();
+                renderFilters();
                 renderList();
                 showToast('Priority ranking updated');
             }
@@ -588,6 +599,7 @@
             document.getElementById('itemTitle').value = '';
             document.getElementById('itemGoal').value = '';
             document.getElementById('itemReferenceMap').value = '';
+            document.getElementById('itemDifficulty').value = '';
             document.getElementById('itemDescription').value = '';
             
             document.getElementById('itemModal').classList.remove('hidden');
@@ -603,9 +615,14 @@
             document.getElementById('itemTitle').value = item.title || '';
             document.getElementById('itemGoal').value = item.goal || '';
             document.getElementById('itemReferenceMap').value = item.referenceMap || '';
+            document.getElementById('itemDifficulty').value = item.difficulty || '';
             document.getElementById('itemDescription').value = item.description || '';
 
             document.getElementById('itemModal').classList.remove('hidden');
+        }
+
+        function setQuickDifficulty(val) {
+            document.getElementById('itemDifficulty').value = val;
         }
 
         function closeModal(modalId) {
@@ -618,7 +635,7 @@
 
             items = items.filter(i => i.id !== id);
             saveData();
-            renderGoalFilters();
+            renderFilters();
             renderList();
             showToast(`Deleted "${item.title}"`);
         }
@@ -638,25 +655,26 @@
             if (activeModalFormat === 'csv') {
                 csvBtn.className = 'text-xs sm:text-sm font-semibold text-sky-600 dark:text-sky-400 border-b-2 border-sky-600 pb-1';
                 jsonBtn.className = 'text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 pb-1';
-                desc.innerHTML = 'Supported CSV columns: <code class="bg-slate-100 dark:bg-slate-900 px-1 py-0.5 rounded text-sky-600 dark:text-sky-400">Rank, Title, Goal, Reference map, Description</code>.';
+                desc.innerHTML = 'Supported CSV columns: <code class="bg-slate-100 dark:bg-slate-900 px-1 py-0.5 rounded text-sky-600 dark:text-sky-400">Rank, Title, Goal, Reference map, Difficulty, Description</code>.';
             } else {
                 jsonBtn.className = 'text-xs sm:text-sm font-semibold text-sky-600 dark:text-sky-400 border-b-2 border-sky-600 pb-1';
-                csvBtn.className = 'text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 pb-1';
-                desc.innerHTML = 'JSON Array format with <code class="bg-slate-100 dark:bg-slate-900 px-1 py-0.5 rounded text-sky-600 dark:text-sky-400">title, goal, referenceMap, description</code> properties.';
+                csvBtn.className = 'text-xs sm:text-sm font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 pb-1';
+                desc.innerHTML = 'JSON Array format with <code class="bg-slate-100 dark:bg-slate-900 px-1 py-0.5 rounded text-sky-600 dark:text-sky-400">title, goal, referenceMap, difficulty, description</code> properties.';
             }
         }
 
         function populateImportExportArea() {
             const textarea = document.getElementById('importExportTextarea');
             if (activeModalFormat === 'csv') {
-                let csv = 'Rank,Title,Goal,Reference map,Description\n';
+                let csv = 'Rank,Title,Goal,Reference map,Difficulty,Description\n';
                 items.forEach((item, index) => {
                     const rank = index + 1;
                     const title = `"${(item.title || '').replace(/"/g, '""')}"`;
                     const goal = `"${(item.goal || '').replace(/"/g, '""')}"`;
                     const refMap = `"${(item.referenceMap || '').replace(/"/g, '""')}"`;
+                    const diff = `"${(item.difficulty || '').replace(/"/g, '""')}"`;
                     const desc = `"${(item.description || '').replace(/"/g, '""')}"`;
-                    csv += `${rank},${title},${goal},${refMap},${desc}\n`;
+                    csv += `${rank},${title},${goal},${refMap},${diff},${desc}\n`;
                 });
                 textarea.value = csv;
             } else {
@@ -665,6 +683,7 @@
                     title: item.title,
                     goal: item.goal,
                     referenceMap: item.referenceMap || '',
+                    difficulty: item.difficulty || '',
                     description: item.description || ''
                 }));
                 textarea.value = JSON.stringify(jsonExport, null, 2);
@@ -687,11 +706,11 @@
                             title: item.title || 'Untitled Item',
                             goal: item.goal || 'General',
                             referenceMap: item.referenceMap || item['Reference map'] || '',
+                            difficulty: item.difficulty || item['Difficulty'] || 'Medium',
                             description: item.description || ''
                         }));
                     }
                 } else {
-                    // Parse CSV/TSV
                     const lines = text.split('\n').filter(l => l.trim() !== '');
                     if (lines.length <= 1) {
                         showToast('CSV must have headers and data rows', true);
@@ -699,22 +718,23 @@
                     }
 
                     const parsedItems = [];
-                    // Skip header row
                     for (let i = 1; i < lines.length; i++) {
                         const cols = parseCSVLine(lines[i]);
                         if (cols.length >= 2) {
-                            // Column mapping: Rank [0], Title [1], Goal [2], Reference map [3], Description [4]
+                            // Column mapping: Rank [0], Title [1], Goal [2], Reference map [3], Difficulty [4], Description [5]
                             let title = cols[1] || cols[0];
                             let goal = cols[2] || 'General';
                             let refMap = cols[3] || '';
-                            let desc = cols[4] || '';
+                            let diff = cols[4] || 'Medium';
+                            let desc = cols[5] || '';
 
                             // Fallback if no rank column provided
-                            if (cols.length < 4 && isNaN(parseInt(cols[0]))) {
+                            if (cols.length < 5 && isNaN(parseInt(cols[0]))) {
                                 title = cols[0];
                                 goal = cols[1] || 'General';
                                 refMap = cols[2] || '';
-                                desc = cols[3] || '';
+                                diff = cols[3] || 'Medium';
+                                desc = cols[4] || '';
                             }
 
                             parsedItems.push({
@@ -722,6 +742,7 @@
                                 title: title.trim(),
                                 goal: goal.trim(),
                                 referenceMap: refMap.trim(),
+                                difficulty: diff.trim(),
                                 description: desc.trim()
                             });
                         }
@@ -736,7 +757,7 @@
                 }
 
                 saveData();
-                renderGoalFilters();
+                renderFilters();
                 renderList();
                 closeModal('importExportModal');
                 showToast(`Successfully imported ${items.length} items`);
@@ -747,7 +768,6 @@
             }
         }
 
-        // CSV line helper that respects quoted values
         function parseCSVLine(line) {
             const result = [];
             let current = '';
@@ -771,6 +791,12 @@
         function openSummaryModal() {
             const container = document.getElementById('summaryContainer');
             
+            if (items.length === 0) {
+                container.innerHTML = `<p class="text-xs text-slate-500 text-center py-6">No items in priority list.</p>`;
+                document.getElementById('summaryModal').classList.remove('hidden');
+                return;
+            }
+
             let html = `
                 <table class="w-full text-left text-xs sm:text-sm">
                     <thead>
@@ -779,6 +805,7 @@
                             <th class="py-2 px-3 font-semibold">Title</th>
                             <th class="py-2 px-3 font-semibold">Goal</th>
                             <th class="py-2 px-3 font-semibold text-rose-700 dark:text-rose-400">Reference Map</th>
+                            <th class="py-2 px-3 font-semibold text-amber-700 dark:text-amber-400">Difficulty</th>
                             <th class="py-2 px-3 font-semibold">Description</th>
                         </tr>
                     </thead>
@@ -799,6 +826,13 @@
                             ${item.referenceMap ? `
                                 <span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-950/80 dark:text-rose-300 dark:border-rose-800 font-semibold">
                                     Reference(s): ${escapeHtml(item.referenceMap)}
+                                </span>
+                            ` : '<span class="text-slate-400">-</span>'}
+                        </td>
+                        <td class="py-3 px-3">
+                            ${item.difficulty ? `
+                                <span class="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/80 dark:text-amber-300 dark:border-amber-800 font-semibold">
+                                    Difficulty: ${escapeHtml(item.difficulty)}
                                 </span>
                             ` : '<span class="text-slate-400">-</span>'}
                         </td>
@@ -826,6 +860,9 @@
                 if (item.referenceMap) {
                     summaryText += `   Reference(s): ${item.referenceMap}\n`;
                 }
+                if (item.difficulty) {
+                    summaryText += `   Difficulty: ${item.difficulty}\n`;
+                }
                 if (item.description) {
                     summaryText += `   Notes: ${item.description}\n`;
                 }
@@ -839,6 +876,7 @@
             // Add Item buttons
             document.getElementById('addItemBtn').addEventListener('click', openAddModal);
             document.getElementById('emptyAddBtn').addEventListener('click', openAddModal);
+            document.getElementById('emptyImportBtn').addEventListener('click', openImportExportModal);
 
             // Close Modals
             document.querySelectorAll('.closeModalBtn').forEach(btn => {
@@ -856,37 +894,38 @@
                 const title = document.getElementById('itemTitle').value.trim();
                 const goal = document.getElementById('itemGoal').value.trim();
                 const refMap = document.getElementById('itemReferenceMap').value.trim();
+                const diff = document.getElementById('itemDifficulty').value.trim();
                 const desc = document.getElementById('itemDescription').value.trim();
 
                 if (editId) {
-                    // Update existing
                     const item = items.find(i => i.id === editId);
                     if (item) {
                         item.title = title;
                         item.goal = goal;
                         item.referenceMap = refMap;
+                        item.difficulty = diff;
                         item.description = desc;
                         showToast(`Updated "${title}"`);
                     }
                 } else {
-                    // Add new item
                     items.push({
                         id: 'item-' + Date.now(),
                         title: title,
                         goal: goal,
                         referenceMap: refMap,
+                        difficulty: diff,
                         description: desc
                     });
-                    showToast(`Added "${title}" to priority list`);
+                    showToast(`Added "${title}"`);
                 }
 
                 saveData();
-                renderGoalFilters();
+                renderFilters();
                 renderList();
                 closeModal('itemModal');
             });
 
-            // Search input
+            // Search bar bindings
             const searchInput = document.getElementById('searchInput');
             const clearSearchBtn = document.getElementById('clearSearchBtn');
 
@@ -937,27 +976,16 @@
                 showToast(`Downloaded priority-ranking-export.${ext}`);
             });
 
-            // Clear All & Load Sample Data
+            // Clear All
             document.getElementById('clearAllBtn').addEventListener('click', () => {
                 if (items.length === 0) return;
                 items = [];
                 selectedGoalFilter = 'ALL';
+                selectedDifficultyFilter = 'ALL';
                 saveData();
-                renderGoalFilters();
+                renderFilters();
                 renderList();
-                showToast('Cleared all priority items');
-            });
-
-            document.getElementById('resetSampleDataBtn').addEventListener('click', () => {
-                items = [...initialSampleData];
-                selectedGoalFilter = 'ALL';
-                currentSearchQuery = '';
-                searchInput.value = '';
-                clearSearchBtn.classList.add('hidden');
-                saveData();
-                renderGoalFilters();
-                renderList();
-                showToast('Loaded default sample data');
+                showToast('Cleared all items');
             });
 
             // Theme Toggle
@@ -1015,7 +1043,7 @@
                 .replace(/'/g, "&#039;");
         }
 
-        // Initialize on DOM Ready
+        // Initialize App on load
         window.addEventListener('DOMContentLoaded', initApp);
     </script>
 </body>
